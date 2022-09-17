@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Dyson Purifier Cool AutoReact Controller</title>
+    <meta charset='UTF-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900' rel='stylesheet'>
+    <link href='https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css' rel='stylesheet'>
+    <link href='https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css' rel='stylesheet'>
+    <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui'>
+    <script src='https://cdn.jsdelivr.net/npm/vue@2.7.10'></script>
+    <script src='https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js'></script>
+</head>
+
+<body>
+    <div id='app'>
+        <v-app>
+            <v-main>
+                <v-container fluid><template>
+                        <v-row>
+                            <v-col cols='12' sm='2' xs='4' >
+                                <v-row>
+                                    <v-col cols='6' v-for='item in items' align='center'>
+                                        <v-btn fab x-large :color=item.color||'primary'
+                                            @click='sendCommand(item.value)'>
+                                            <v-icon x-large dark>{{item.icon}}</v-icon>
+                                        </v-btn>
+                                    </v-col>
+                                </v-row>
+                            </v-col>
+                        </v-row>
+                    </template></v-container>
+            </v-main>
+        </v-app>
+    </div>
+    <script>
+        new Vue({
+            el: '#app',
+            vuetify: new Vuetify({ theme: { dark: true } }),
+            data: () => ({
+                items: [{ text: 'On / Off', value: 'onOff', icon: 'mdi-power-standby', color: 'red' },
+                { text: 'Information Menu', value: 'informationMenu', icon: 'mdi-information-outline' },
+                { text: 'Airflow Speed (+)', value: 'airflowSpeedUp', icon: 'mdi-fan-plus' },
+                { text: 'Auto Mode', value: 'autoMode', icon: 'mdi-refresh-auto' },
+                { text: 'Airflow Speed (-)', value: 'airflowSpeedDown', icon: 'mdi-fan-minus' },
+                { text: 'Airflow Direction', value: 'airflowDirection', icon: 'mdi-horizontal-rotate-clockwise' },
+                { text: 'Oscillation On / Of', value: 'oscillationOnOf', icon: 'mdi-axis-z-rotate-counterclockwise' },
+                { text: 'Night Mode', value: 'nightMode', icon: 'mdi-weather-night', color:'blue darken-4' }]
+            }),
+            methods: {
+                async sendCommand(command) {
+                    try {
+                        const response = await (await fetch(`/set?command=${command}`)).text();
+                        console.log(response);
+                    } catch (error) {
+                        window.alert(error.message)
+                    }
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
